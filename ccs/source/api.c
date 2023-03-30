@@ -346,3 +346,134 @@ void clear_all_leds(void){
 }
 
 
+//---------------------------------------------------------------------
+//            Calibrate
+//            calibrate the stepper motor and sent to PC the number of steps for one lap and the angle of one step
+//---------------------------------------------------------------------
+void calibrate(){
+    int countStep = 0 ;
+    int numDelay = 500;
+    double angleMeasureent ;
+    enterLPM(lpm_mode);  // until a command to start the stepper
+    while(boolStart == 1){       // bring you to 12 o'clock!
+            PBOUT &= ~0x0F;
+            PBOUT |= 1;
+            TimerWait(numDelay);
+            PBOUT&= ~0x0F;
+            PBOUT |= 8;
+            TimerWait(numDelay);
+            PBOUT &= ~0x0F;
+            PBOUT |= 4;
+            TimerWait(numDelay);
+            PBOUT &= ~0x0F;
+            PBOUT |= 2;
+            TimerWait(numDelay);
+        }
+    TACCTL0 &=~ CCIE ;
+
+    enterLPM(lpm_mode);
+    __no_operation() ;
+    while(boolStart == 1){       // bring you to 12 o'clock!
+                PBOUT &= ~0x0F;
+                PBOUT |= 1;
+                TimerWait(numDelay);
+                PBOUT&= ~0x0F;
+                PBOUT |= 8;
+                TimerWait(numDelay);
+                PBOUT &= ~0x0F;
+                PBOUT |= 4;
+                TimerWait(numDelay);
+                PBOUT &= ~0x0F;
+                PBOUT |= 2;
+                TimerWait(numDelay);
+                countStep = countStep + 1;
+            }
+    angleMeasureent = 360.0 / countStep ;
+    stepCount[2]= (char) (countStep%10 +48) ;
+    stepCount[1] = (char) ((countStep%100 - countStep%10)/10 +48 ) ;
+    stepCount[0] = (char) ((countStep%1000 - countStep%100)/100 +48) ;
+    stepCount[3] = '\n';
+    k = 0 ;
+    bool = 2;
+    IE2 |= UCA0TXIE;
+    TimerWait(3250);
+    TACCTL0 &=~ CCIE ;
+    mone_steps = 0 ;
+
+    state = state0 ; //sleepMode
+}
+
+
+//---------------------------------------------------------------------
+//            stepper_motor
+//            rotate the stepper motor through the joystick
+//---------------------------------------------------------------------
+void stepper_motor(){
+    int numDelay = 500;
+    double angleOfStep = 0.703 ; //angle I measured
+    int stepperDest ; // stepperDest means angle destination
+    enterLPM(lpm_mode);  // until a command to start the stepper
+    while(boolStart == 1){       // bring you to 12 o'clock
+            PBOUT &= ~0x0F;
+            PBOUT |= 1;
+            TimerWait(numDelay);
+            PBOUT&= ~0x0F;
+            PBOUT |= 8;
+            TimerWait(numDelay);
+            PBOUT &= ~0x0F;
+            PBOUT |= 4;
+            TimerWait(numDelay);
+            PBOUT &= ~0x0F;
+            PBOUT |= 2;
+            TimerWait(numDelay);
+        }
+    TACCTL0 &=~ CCIE ;
+    //here we should be on 12 o'clock
+
+    mone_steps = 0 ;
+    enable_interrupts();
+    ADCconfig();
+    ADC10SA = (unsigned int) adc;
+    ADC10CTL0 |= ENC + ADC10SC ;
+    enterLPM(0);
+    stepperDest = (int) angle / 0.703 ;
+    stepperDest = (stepperDest + 512 )% 512 ;
+
+    while(state == state1){
+        disable_interrupts();
+        if (angle != 1000 && fabs(stepperDest - mone_steps)>21 ) {
+            if(stepperDest - mone_steps >0){
+                if (stepperDest - mone_steps <256){
+                    stepperSpin(40, -1);
+                    mone_steps = mone_steps + 40 ;
+                }
+                else{
+                    stepperSpin(40, 1);
+                    mone_steps = mone_steps - 40 ;
+                }
+            }
+            else{
+                    if (mone_steps - stepperDest <256){
+                        stepperSpin(40, 1);
+                        mone_steps = mone_steps - 40 ;
+                    }
+                    else{
+                        stepperSpin(40, -1);
+                        mone_steps = mone_steps + 40 ;
+                    }
+                }
+            }
+            mone_steps = (mone_steps + 512) % 512 ;
+
+        ADC10SA = (unsigned int) adc;
+        ADC10CTL0 |= ENC + ADC10SC ;
+        enable_interrupts();
+        enterLPM(0);
+        if (angle != 1000) {
+            stepperDest = (int) angle / 0.703 ;
+            stepperDest = (stepperDest + 512 ) % 512 ;
+        }
+    }
+}
+
+
