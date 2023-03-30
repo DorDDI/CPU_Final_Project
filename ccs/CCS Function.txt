@@ -1,0 +1,40 @@
+Embedded Function:
+
+main functions:
+
+1) stepper_motor - rotate the stepper motor through the joystick
+2) paint - start the draw function through the joystick
+3) calibrate - calibrate the stepper motor and sent to PC the number of steps for one lap and the angle of one step
+4) script -  load the script to the flash and start the selected script from the PC
+
+side functions:
+1) stepperSpin(int stepNum, int spinDirection) - spin the stepper motor stepNum steps with or against clock direction
+					 spinDirection = 1 for against clock direction
+					 spinDirection = -1 for clock direction
+2) runScript(int scriptnumber) - run the selected script saved in the flash
+3) blink_rgb(int x) - Blink RGB LED in series x times with delay d
+4) set_delay(int d) - Set the delay d value ( units of 10ms )
+5) rrc_leds(int x) - Rotate right circularly a single lighted LED in 4-LED array x times with delay d
+6) rlc_leds(int x) - Rotate left circularly a single lighted LED in 4-LED array x times with delay d
+7) stepper_deg1(int x, char ch) move the stepper motor to the x angle and sent it to PC
+8) stepper_deg(int x) - run the stepper_deg1 for script task 6
+9) stepper_scan(int l, int r) - move the stepper motor from angle l to angle r and send them both to PC
+10) clear_all_leds() - clear the leds and the RGB leds
+11) delay(unsigned int t) - delay function for debounce
+12) enterLPM(unsigned char LPM_level - entering the selected LPM mode
+13) enable_interrupts() - enable interrupts
+14) disable_interrupts() - disable interrupts
+15) TimerWait(int number) - wait "number" cycles (65535 for 1 sec)
+16) adc_setup() - ADC setup
+17) sysConfig() - system Config
+18) hex_ro_int(char temp1, char temp2) - converse the hex number to decimal number
+
+Interrupt Service Rotine:
+1) timer_a0 - TimerA0 Interrupt Service Rotine
+2) USCI0TX_ISR - UART T Service Rotine
+3) USCI0RX_ISR - UART R Service Rotine
+4) ADC10 - ADC10 Interrupt Service Rotine
+5) PBs_handler -  Port1 Interrupt Service Rotine
+6) PBs_handler2 -  Port2 Interrupt Service Rotine
+
+
