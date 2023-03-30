@@ -18,7 +18,7 @@ def clear_info(): #clear the info of the angles or steps that appears on screen
 
 def clear(tim): #clear the draw screen
     tim.clear()
-    
+
 def firstTask(): #rotate the stepper motor through the joystick
     closeTabs()
     global state,bool_third
@@ -67,7 +67,6 @@ def stoptmove(): #stop moving the stepper motor
         clearinfo.grid(row=10, column=2, rowspan=2,columnspan=2)
         counterlabel.grid(row=10,column=1)
         anglelabel.grid(row=11, column=1)
-
 
 def secondTask(string,tim,mode): #start the draw function through the joystick
     closeTabs()
@@ -179,7 +178,65 @@ def fourthTask(): #start the script menu and load the script to the flash
     script2button.grid(row=11, column=2)
     script3button.grid(row=11, column=3,padx=20)
 
+def readScript(scriptNum): #send the selected script to the Embedded system
+    clear_info()
+    root.update()
+    global anglelabel,anglelleftabel,anglelrigthabel,first_arg,dinamicangle
+    # clear buffers
+    task = ""
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    inChar = scriptNum
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    while (task != "!"):
+        string1 = ""
+        kelet = 0
+        while (kelet ==0):
+            while (s.in_waiting > 0):  # while the input buffer isn't empty
+                char = s.read(size=1)  # read 1 char from the input buffer
+                string1 = string1 + char.decode("ascii")
+                time.sleep(0.02)
+                kelet = 1
+        time.sleep(0.05)
+        a = string1.replace("\n", "")
+        task = a[0]
+        if(task == "6"):
+            b = str(int(a[1:4])) #cut the zeros
+            anglelabel.grid_forget()
+            anglelabel = Label(root, text="the angle after task 6 is " + b, padx=40, pady=20,bg="#7F7F7F", font=("helvetica", 12))
+            dinamicangle.grid_forget()
+            dinamicangle = Label(root, text="the dynamic angle " + b, padx=40, pady=20, bg="#7F7F7F",font=("helvetica", 12))
+            dinamicangle.grid(row=13, column=2)
+            anglelabel.grid(row=13, column=1)
+            root.update()
+            time.sleep(0.5)
+        if(task =="7"):
+            if (first_arg==1):
+                b = str(int(a[1:4]))  # cut the zeros
+                anglelleftabel.grid_forget()
+                anglelleftabel = Label(root, text="the left angle is " + b, padx=40, pady=20,bg="#7F7F7F", font=("helvetica", 12))
+                dinamicangle.grid_forget()
+                dinamicangle = Label(root, text="the dynamic angle " + b, padx=40, pady=20, bg="#7F7F7F",font=("helvetica", 12))
+                dinamicangle.grid(row=13, column=2)
+                anglelleftabel.grid(row=14, column=1)
+                root.update()
+                first_arg=0
+            else:
+                a = string1.replace("\n", "")
+                b2 = str(int(a[1:4]))  # cut the zeros
+                anglelrigthabel.grid_forget()
+                anglelrigthabel = Label(root, text="the rigth angle is  " + b2, padx=40, pady=20,bg="#7F7F7F", font=("helvetica", 12))
+                dinamicangle.grid_forget()
+                dinamicangle = Label(root, text="the dynamic angle " + b2, padx=40, pady=20, bg="#7F7F7F",font=("helvetica", 12))
+                dinamicangle.grid(row=13, column=2)
+                anglelrigthabel.grid(row=15, column=1)
+                root.update()
+                first_arg = 1
 
+    clearinfo.grid(row=14, column=2, rowspan=2,columnspan=2)
 
 root = Tk()
 root.config(bg="#7F7F7F")
@@ -232,8 +289,3 @@ script2button = Button(root,text = "script 2", padx=20,pady=10,font=("helvetica"
 script3button = Button(root,text = "script 3", padx=20,pady=10,font=("helvetica", 20), background="#6A5ACD",command=lambda:readScript("C"))
 
 root.mainloop()
-
-
-
-
-
