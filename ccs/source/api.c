@@ -477,3 +477,31 @@ void stepper_motor(){
 }
 
 
+//---------------------------------------------------------------------
+//            paint
+//            start the draw function through the joystick
+//---------------------------------------------------------------------
+void paint(){
+    ADCconfig();
+    bool = 0;
+    while(state == state2){
+        ADC10SA = (unsigned int) adc;
+        ADC10CTL0 |= ENC + ADC10SC ;                //take the first sample from the Joystick
+        enterLPM(0);
+        if(angle != 1000)
+        {
+            int roundAngle = (int) angle;
+            angleString[2]= (char) (roundAngle%10 +48) ;
+            angleString[1] = (char) ((roundAngle%100 - roundAngle%10)/10 +48 ) ;
+            angleString[0] = (char) ((roundAngle%1000 - roundAngle%100)/100 +48) ;
+            angleString[3] = '\n';
+            k = 0 ;
+            IE2 |= UCA0TXIE;
+            TimerWait(3250);
+            TACCTL0 &=~ CCIE ;
+        }
+    }
+}
+
+
+
