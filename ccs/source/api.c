@@ -158,3 +158,41 @@ void runScript(int scriptnumber){
     }
 }
 
+//---------------------------------------------------------------------
+//            hex_to_int
+//            calculate the hex number into decimal
+//---------------------------------------------------------------------
+
+int hex_to_int(char hex_a, char hex_b){
+    int calculated_hex = 0;
+    if(hex_a >= 48 && hex_a <=57)
+        {
+        calculated_hex = ((int)hex_a -48)*16;
+
+            if(hex_b >= 48 && hex_b <=57){
+                calculated_hex = calculated_hex+(int)hex_b-48;
+            }
+            else
+            {
+                calculated_hex = calculated_hex+ ((int)hex_b -55);
+            }
+
+        }
+    else
+    {
+        calculated_hex = ((int)hex_a -55)*16;
+
+        if(hex_b >= 48 && hex_b <=57){
+            calculated_hex = calculated_hex+(int)hex_b-48;
+        }
+        else
+        {
+            calculated_hex = calculated_hex+ ((int)hex_b -55);
+        }
+    }
+    return calculated_hex;
+}
+
+
+
+
