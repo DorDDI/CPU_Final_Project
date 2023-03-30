@@ -19,6 +19,57 @@ def clear_info(): #clear the info of the angles or steps that appears on screen
 def clear(tim): #clear the draw screen
     tim.clear()
     
+def firstTask(): #rotate the stepper motor through the joystick
+    closeTabs()
+    global state,bool_third
+    bool_third = 0
+    state = 1
+    # clear buffers
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    inChar = "1"
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    startmovebutton.grid(row=8, column=1)
+
+def startmove(): #start moving the stepper motor
+    inChar = "5"
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    startmovebutton.grid_forget()
+    stopmovebutton.grid(row=8, column=1)
+
+def stoptmove(): #stop moving the stepper motor
+    b = 0
+    inChar = "6"
+    global bool_third,counterlabel,anglelabel
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    stopmovebutton.grid_forget()
+    if(bool_third == 1):
+        bool_third = 2
+        startmovebutton.grid(row=8, column=1)
+    elif(bool_third == 2):
+        s.reset_input_buffer()
+        s.reset_output_buffer()
+        while (b==0):
+            string1 = ""
+            while (s.in_waiting > 0):  # while the input buffer isn't empty
+                char = s.read(size=1)  # read 1 char from the input buffer
+                string1 = string1 + char.decode("ascii")
+            time.sleep(0.05)
+            a = string1.replace("\n","")
+            if (a!= ""):
+                b = int(a)
+                a = str(int(a))
+        counterlabel = Label(root,text="the counter is "+ a +" steps" ,padx=40,pady=20,bg="#7F7F7F",font=("helvetica", 12))
+        anglelabel = Label(root, text="the angle is " + str(round(360.0/b,4)) + " degrees", padx=40, pady=20,bg="#7F7F7F", font=("helvetica", 12))
+        clearinfo.grid(row=10, column=2, rowspan=2,columnspan=2)
+        counterlabel.grid(row=10,column=1)
+        anglelabel.grid(row=11, column=1)
+
+
+
 root = Tk()
 root.config(bg="#7F7F7F")
 tim = turtle.Turtle()
