@@ -115,6 +115,34 @@ def secondTask(string,tim,mode): #start the draw function through the joystick
         root.update()
     tim.right(angle)
 
+def thirdTask(): #calibrate the stepper motor and print the number of steps for one lap and the angle of one step
+    closeTabs()
+    global state,bool_third
+    state = 3
+    # clear buffers
+    bool_third = 1
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    inChar = "3"
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    startmovebutton.grid(row=8, column=1)
+
+def closeTabs(): #close all the open tabs / windows
+    startmovebutton.grid_forget()
+    stopmovebutton.grid_forget()
+    script1button.grid_forget()
+    script2button.grid_forget()
+    script3button.grid_forget()
+    clearinfo.grid_forget()
+    counterlabel.grid_forget()
+    anglelabel.grid_forget()
+    anglelleftabel.grid_forget()
+    anglelrigthabel.grid_forget()
+    dinamicangle.grid_forget()
+    acknowledge.grid_forget()
+
+
 
 root = Tk()
 root.config(bg="#7F7F7F")
