@@ -142,6 +142,43 @@ def closeTabs(): #close all the open tabs / windows
     dinamicangle.grid_forget()
     acknowledge.grid_forget()
 
+def fourthTask(): #start the script menu and load the script to the flash
+    closeTabs()
+    global state,firstTime
+    state = 4
+    # clear buffers
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    inChar = "4"
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+
+    if (firstTime == 1):
+        firstTime = 0
+        with open('Script1.txt') as f:
+            lines1 = f.read()
+        with open('Script2.txt') as f:
+            lines2 = f.read()
+        with open('Script3.txt') as f:
+            lines3 = f.read()
+        lines1 = lines1 + "!"
+        lines2 = lines2 + "!"
+        lines3 = lines3 + "!"
+        bytesChar = bytes(lines1, 'ascii')
+        time.sleep(0.1)
+        s.write(bytesChar)
+        time.sleep(0.1)
+        bytesChar = bytes(lines2, 'ascii')
+        s.write(bytesChar)
+        time.sleep(0.1)
+        bytesChar = bytes(lines3, 'ascii')
+        s.write(bytesChar)
+        acknowledge.grid(row=12, column=1)
+
+    script1button.grid(row=11, column=1)
+    script2button.grid(row=11, column=2)
+    script3button.grid(row=11, column=3,padx=20)
+
 
 
 root = Tk()
