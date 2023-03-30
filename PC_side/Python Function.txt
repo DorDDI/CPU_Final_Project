@@ -1,0 +1,13 @@
+Python Function:
+
+1) firstTask - rotate the stepper motor through the joystick
+2) secondTask - start the draw function through the joystick
+3) thirdTask - calibrate the stepper motor and print the number of steps for one lap and the angle of one step
+4) fourthTask - start the script menu and load the script to the flash
+5) readScript - send the selected script to the Embedded system
+6) startmove - start moving the stepper motor
+7) stoptmove - stop moving the stepper motor
+8) closeTabs - close all the open tabs / windows
+9) clear - clear the draw screen
+10) clear_info - clear the info of the angles or steps that appears on screen
+11) quit - quit from the menu
