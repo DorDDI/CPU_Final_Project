@@ -196,3 +196,66 @@ int hex_to_int(char hex_a, char hex_b){
 
 
 
+//---------------------------------------------------------------------
+//            Print RGB
+//            Blink RGB LED in series x times with delay d
+//---------------------------------------------------------------------
+
+void blink_rgb(int x){
+    RGBcolor = 0x20;
+    for (i = 0; i<x; i++)
+    {
+        LEDsArrPort = RGBcolor;
+        RGBcolor=RGBcolor+0x20;
+        if (RGBcolor == 0x100)
+            {
+                RGBcolor=0x20;
+            }
+          TimerWait(deleyX);
+    }
+}
+
+
+//---------------------------------------------------------------------
+//            rotate rigth leds
+//            Rotate right circularly a single lighted LED in 4-LED array x times with delay d
+//---------------------------------------------------------------------
+
+void rrc_leds(int x){
+    int tempChar = 0x80;
+    PBOUT &=~ 0xF0;
+    for (i =0; i <x; i++)
+    {
+        PBOUT = tempChar;
+        tempChar = tempChar / 2;
+        if (tempChar == 0x08)
+            tempChar = 0x80;
+        TimerWait(deleyX);
+    }
+}
+
+//---------------------------------------------------------------------
+//            rotate left leds
+//            Rotate left circularly a single lighted LED in 4-LED array x times with delay d
+//---------------------------------------------------------------------
+
+void rlc_leds(int x){
+
+    int tempChar = 0x10;
+    PBOUT &=~ 0xF0;
+    for (i =0; i <x; i++)
+    {
+        PBOUT = tempChar;
+        tempChar = tempChar * 2;
+        if (tempChar == 0x100)
+            tempChar = 0x10;
+        TimerWait(deleyX);
+        }
+    }
+
+
+//---------------------------------------------------------------------
+//            Stepper Degree
+//            run the stepper_deg1 for script task 6
+//---------------------------------------------------------------------
+
