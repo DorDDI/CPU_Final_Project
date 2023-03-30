@@ -259,3 +259,90 @@ void rlc_leds(int x){
 //            run the stepper_deg1 for script task 6
 //---------------------------------------------------------------------
 
+void stepper_deg(int x){
+    stepper_deg1(x,'6');
+}
+
+
+//---------------------------------------------------------------------
+//            Stepper Degree
+//            char ch) move the stepper motor to the x angle and sent it to PC
+//---------------------------------------------------------------------
+
+void stepper_deg1(int x, char ch){
+    int stepperDest = (int) x / 0.703 ;
+    stepperDest = (512 - stepperDest) % 512 ;
+
+    if (stepperDest>mone_steps)
+    {
+        int delta = stepperDest - mone_steps ;
+        if (stepperDest - mone_steps <256)
+        {
+            stepperSpin(delta , -1);
+        }
+        else
+        {
+            stepperSpin(512 - delta , 1);
+        }
+    }
+    else
+    {
+        int delta = mone_steps - stepperDest ;
+        if (stepperDest - mone_steps <256)
+        {
+            stepperSpin(delta, 1);
+        }
+        else
+        {
+            stepperSpin(512 - delta, -1);
+        }
+    }
+    mone_steps = stepperDest ;
+
+    bool = 3;
+    int angleStep = ceil(((512 - stepperDest)%512)*0.703 );
+    angle_stepp[3]= (char) (angleStep%10 +48) ;
+    angle_stepp[2] = (char) ((angleStep%100 - angleStep%10)/10 +48 ) ;
+    angle_stepp[1] = (char) ((angleStep%1000 - angleStep%100)/100 +48) ;
+    angle_stepp[0] = ch;
+    angle_stepp[4] = '\n';
+    k = 0 ;
+
+    IE2 |= UCA0TXIE;
+    TimerWait(32500);
+    TACCTL0 &=~ CCIE ;
+    state = state0;
+}
+
+
+//---------------------------------------------------------------------
+//            Stepper_scan
+//            move the stepper motor from angle l to angle r and send them both to PC
+//---------------------------------------------------------------------
+
+void stepper_scan(int l, int r){
+    stepper_deg1(l, '7');
+    stepper_deg1(r , '7');
+}
+
+
+//---------------------------------------------------------------------
+//            Set Delay
+//            Set the delay d value ( units of 10ms )
+//---------------------------------------------------------------------
+
+void set_delay(int d){
+    deleyX = d*655;
+}
+
+
+//--------------------------------------------------------------------
+//              Clear all leds
+//              clear the leds and the RGB leds
+//--------------------------------------------------------------------
+void clear_all_leds(void){
+    LEDsArrPort &=~ 0xE0;
+    PBOUT &=~ 0xF0;
+}
+
+
