@@ -158,6 +158,7 @@ void runScript(int scriptnumber){
     }
 }
 
+
 //---------------------------------------------------------------------
 //            hex_to_int
 //            calculate the hex number into decimal
@@ -504,4 +505,46 @@ void paint(){
 }
 
 
+
+//---------------------------------------------------------------------
+//            script
+//            load the script to the flash and start the selected script from the PC
+//---------------------------------------------------------------------
+void script(){
+
+    if (firstTimeScript ==1)
+    {
+        firstTimeScript =0;
+        scriptindex = 1;
+        Flash_ptrB = (char *) 0x1080;             // Initialize Flash segment B pointer
+        Flash_ptrC = (char *) 0x1040;             // Initialize Flash segment C pointer
+        Flash_ptrD = (char *) 0x1000;             // Initialize Flash segment D pointer
+
+        FCTL1 = FWKEY + ERASE;                    // Set Erase bit
+        FCTL3 = FWKEY;                            // Clear Lock bit
+
+        *Flash_ptrB = 0;                          // Dummy write to erase Flash segment B
+        *Flash_ptrC = 0;                          // Dummy write to erase Flash segment C
+        *Flash_ptrD = 0;                          // Dummy write to erase Flash segment D
+        FCTL1 = FWKEY + WRT;                      // Set WRT bit for write operation
+
+        command = 0;
+
+        enable_interrupts();
+        enterLPM(lpm_mode);
+
+        FCTL1 = FWKEY;                            // Clear WRT bit
+        FCTL3 = FWKEY + LOCK;                     // Set LOCK bit
+    }
+    while (state == state4)
+    {
+        enable_interrupts();
+        enterLPM(lpm_mode);
+
+        if (state == state4)
+          {
+                runScript(scriptindex);
+          }
+    }
+}
 
