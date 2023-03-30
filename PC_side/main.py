@@ -3,6 +3,22 @@ import serial as ser
 import turtle
 import time
 
+def quit(tim): #quit from the menu
+    turtle.bye()
+    root.destroy()
+
+def clear_info(): #clear the info of the angles or steps that appears on screen
+    clearinfo.grid_forget()
+    counterlabel.grid_forget()
+    anglelabel.grid_forget()
+    anglelrigthabel.grid_forget()
+    anglelleftabel.grid_forget()
+    dinamicangle.grid_forget()
+    acknowledge.grid_forget()
+
+def clear(tim): #clear the draw screen
+    tim.clear()
+    
 root = Tk()
 root.config(bg="#7F7F7F")
 tim = turtle.Turtle()
