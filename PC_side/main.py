@@ -69,6 +69,52 @@ def stoptmove(): #stop moving the stepper motor
         anglelabel.grid(row=11, column=1)
 
 
+def secondTask(string,tim,mode): #start the draw function through the joystick
+    closeTabs()
+    global state, angle
+    angle = 0
+    state = 2
+    # clear buffers
+    s.reset_input_buffer()
+    s.reset_output_buffer()
+    inChar = "2"
+    bytesChar = bytes(inChar, 'ascii')
+    s.write(bytesChar)
+    time.sleep(0.05)
+    while(state ==2):
+        while (s.in_waiting > 0):  # while the input buffer isn't empty
+            char = s.read(size = 1)  # read 1 char from the input buffer
+            string = string + char.decode("ascii")
+            root.update()
+        st = string[0:3]
+        time.sleep(0.08)
+        if (st != ""):
+            if ("\n" not in st):
+                intst = int(st)
+                if (intst == 500):
+                    if(mode ==0):
+                        mode = 1
+                        tim.pencolor("white")
+                        tim.pensize(30)
+                        tim.shapesize(1.3)
+                    elif(mode ==1):
+                        mode = 2
+                        tim.penup()
+                        tim.shapesize(0.5)
+                    elif(mode ==2):
+                        mode = 0
+                        tim.pensize(1.5)
+                        tim.shapesize(0.5)
+                        tim.pencolor("red")
+                        tim.pendown()
+                elif (intst != 0):
+                    tim.right(angle-(270-intst))
+                    tim.forward(4)
+                    angle = 270 -intst
+        string = ""
+        root.update()
+    tim.right(angle)
+
 
 root = Tk()
 root.config(bg="#7F7F7F")
